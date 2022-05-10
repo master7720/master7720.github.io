@@ -1,0 +1,54 @@
+.github-widget {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: space-around;
+  text-align: left;
+}
+
+.gw-repo {
+  background-color: #1a1919;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 20px;
+  width: 20vw;
+  height: 63%;
+  overflow: hidden;
+}
+
+.gw-title{
+  margin-bottom: 5px;
+}
+
+.gw-name {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.gw-watchers, .gw-forks {
+  display: none;
+}
+
+.gw-lang {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #777;
+}
+
+.gw-repo-desc {
+  font-size: 15px;
+}
+
+@media screen and (max-width: 1140px) {
+  .gw-repo {
+    width: 40vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .gw-repo {
+    width: 80vw;
+  }
+}
