@@ -31,6 +31,21 @@ viewModeSel.addEventListener('change', (e) => {
   renderTimeline();
 });
 
+function parseMonth(m) {
+  if (m === undefined || m === null) return null;
+  if (typeof m === 'number' && Number.isFinite(m)) {
+    const n = Math.trunc(m);
+    return (n >= 1 && n <= 12) ? n : null;
+  }
+  if (typeof m === 'string') {
+    const trimmed = m.trim().toLowerCase();
+    const n = Number(trimmed);
+    if (!Number.isNaN(n) && Number.isFinite(n)) return (n >= 1 && n <= 12) ? n : null;
+    return MONTHS[trimmed] || null;
+  }
+  return null;
+}
+
 function monthYearLabel(monthNum, year) {
   if (!year) return '';
   if (!monthNum) return String(year);
