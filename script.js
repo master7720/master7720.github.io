@@ -31,28 +31,6 @@ viewModeSel.addEventListener('change', (e) => {
   renderTimeline();
 });
 
-// Month Mapping
-const MONTHS = { //this is prolly the worst fucking thing ive ever seen in coding
-  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-  jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
-};
-
-function parseMonth(m) {
-  if (m === undefined || m === null) return null;
-  if (typeof m === 'number' && Number.isFinite(m)) {
-    const n = Math.trunc(m);
-    return (n >= 1 && n <= 12) ? n : null;
-  }
-  if (typeof m === 'string') {
-    const trimmed = m.trim().toLowerCase();
-    const n = Number(trimmed);
-    if (!Number.isNaN(n) && Number.isFinite(n)) return (n >= 1 && n <= 12) ? n : null;
-    return MONTHS[trimmed] || null;
-  }
-  return null;
-}
-
 function monthYearLabel(monthNum, year) {
   if (!year) return '';
   if (!monthNum) return String(year);
