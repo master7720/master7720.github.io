@@ -23,7 +23,7 @@ viewModeSel.addEventListener('change', (e) => {
   currentView = e.target.value;
 
   // Reset classes
-  timelineEl.classList.remove('view-graph','view-horizontal');
+  timelineEl.classList.remove('view-graph', 'view-vertical', 'view-horizontal');
   timelineEl.classList.add(`view-${currentView}`);
 
   // Rerender (Graph view needs specific positioning calculation)
@@ -31,7 +31,7 @@ viewModeSel.addEventListener('change', (e) => {
 });
 
 // Month Mapping
-const MONTHS = {//this is vibe code cancer
+const MONTHS = {
   january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
   jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
