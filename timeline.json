@@ -161,13 +161,6 @@
     "color": "#A879BE"
   },
   {
-    "name": "Ozark",
-    "description": "Enter story info here",
-    "month": 1,
-    "year": 2021,
-    "color": "#A879BE"
-  },
-  {
     "name": "WurstPlusThree",
     "description": "",
     "month": 5,
@@ -177,13 +170,6 @@
   {
     "name": "Lambda",
     "description": "An open-source, therefore free, continuation of now discontinued KAMI Blue. It provides regular updates, and thanks to it being open-source, anyone can contribute. It features a stunningly visionary plugin system, allowing for hot-loading of plugins while in game, to allow for immense customization and quick changes, without reloading Minecraft. It has many advanced utility modules, and can be used for PvP as well, but is more geared towards more casual players.",
-    "month": 6,
-    "year": 2021,
-    "color": "#A879BE"
-  },
-  {
-    "name": "Gamesense++",
-    "description": "Private continuation of gamesense",
     "month": 6,
     "year": 2021,
     "color": "#A879BE"
