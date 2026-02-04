@@ -1,195 +1,220 @@
-/* script.js
-   Loads timeline.json and renders a horizontal timeline.
-   Edit timeline.json to add patches. Each event should include:
-     - name (string)         : required
-     - description (string)  : required or empty string
-     - month (number|string) : month number (1-12) OR month name ("March", "Mar", "mar")
-     - year (number)         : 4-digit year (e.g. 2023)
-   Optional:
-     - id, color
+/* script.js */
 
-   The script normalizes month/year into a Date for sorting. Invalid events are skipped
-   (console warnings) to avoid UI clutter.
-*/
-
-const TIMELINE_JSON = 'timeline.json'; // relative path; GitHub Pages serves this
+const TIMELINE_JSON = 'timeline.json';
 
 // DOM elements
 const timelineEl = document.getElementById('timeline');
 const scrollLeftBtn = document.getElementById('scroll-left');
 const scrollRightBtn = document.getElementById('scroll-right');
 const sortOrderSel = document.getElementById('sort-order');
+const viewModeSel = document.getElementById('view-mode');
+const themeSel = document.getElementById('theme-select');
 
 let events = [];
+let currentView = 'horizontal';
 
-// month name mapping
+// Theme Handling
+themeSel.addEventListener('change', (e) => {
+  document.body.setAttribute('data-theme', e.target.value);
+});
+
+// View Handling
+viewModeSel.addEventListener('change', (e) => {
+  currentView = e.target.value;
+
+  // Reset classes
+  timelineEl.classList.remove('view-horizontal', 'view-vertical', 'view-graph');
+  timelineEl.classList.add(`view-${currentView}`);
+
+  // Rerender (Graph view needs specific positioning calculation)
+  renderTimeline();
+});
+
+// Month Mapping
 const MONTHS = {
   january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
   jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
 };
 
-// Utility: parse month (string or number) -> integer 1-12 or null
-function parseMonth(m){
-  if(m === undefined || m === null) return null;
-  if(typeof m === 'number' && Number.isFinite(m)){
+function parseMonth(m) {
+  if (m === undefined || m === null) return null;
+  if (typeof m === 'number' && Number.isFinite(m)) {
     const n = Math.trunc(m);
     return (n >= 1 && n <= 12) ? n : null;
   }
-  if(typeof m === 'string'){
+  if (typeof m === 'string') {
     const trimmed = m.trim().toLowerCase();
     const n = Number(trimmed);
-    if(!Number.isNaN(n) && Number.isFinite(n)){
-      return (n >= 1 && n <= 12) ? n : null;
-    }
+    if (!Number.isNaN(n) && Number.isFinite(n)) return (n >= 1 && n <= 12) ? n : null;
     return MONTHS[trimmed] || null;
   }
   return null;
 }
 
-// Utility: create a friendly month-year string from numbers
-function monthYearLabel(monthNum, year){
-  if(!year) return '';
-  if(!monthNum) return String(year);
+function monthYearLabel(monthNum, year) {
+  if (!year) return '';
+  if (!monthNum) return String(year);
   const d = new Date(year, monthNum - 1, 1);
-  return d.toLocaleString(undefined, {month: 'long', year: 'numeric'});
+  return d.toLocaleString(undefined, { month: 'long', year: 'numeric' });
 }
 
-// Build event card DOM from event object (expects normalized fields)
-function buildEventCard(ev){
+function buildEventCard(ev, index) {
   const card = document.createElement('article');
   card.className = 'event';
-  card.tabIndex = 0; // focusable
+  card.tabIndex = 0;
 
-  // accent dot (optional color)
+  // Graph View Positioning Logic
+  if (currentView === 'graph') {
+    // Calculate X based on date (approx pixels)
+    // Assume 2010 is start (0px). 
+    // 1 Year = 300px width?
+    const startYear = 2010;
+    const yearDiff = ev.year - startYear;
+    const monthOffset = (ev.__monthNum || 1) / 12;
+    const xPos = (yearDiff + monthOffset) * 200 + 50; // 200px per year
+
+    // Calculate Y based on index (Simple staggering)
+    // Top range: 50px to 400px
+    const yStrata = ['50px', '250px', '450px', '150px', '350px'];
+    const yPos = yStrata[index % 5];
+
+    card.style.left = `${xPos}px`;
+    card.style.top = yPos;
+  } else {
+    card.style.left = '';
+    card.style.top = '';
+  }
+
   const accent = document.createElement('span');
   accent.className = 'event-accent';
-  if(ev.color) accent.style.background = ev.color;
-  else accent.style.background = 'var(--accent)';
+  if (ev.color) accent.style.background = ev.color;
   card.appendChild(accent);
 
-  // date (Month Year)
   const date = document.createElement('div');
   date.className = 'event-date';
   date.textContent = monthYearLabel(ev.__monthNum, ev.year);
   card.appendChild(date);
 
-  // title (name)
   const h = document.createElement('h3');
   h.className = 'event-title';
   h.textContent = ev.name || 'Untitled';
+  // Use theme color for title if specific color not provided, using CSS var usually better
+  // but here we let specific JSON color override logic if we added that CSS rule.
+  if (ev.color) h.style.color = ev.color;
   card.appendChild(h);
 
-  // description
   const desc = document.createElement('div');
   desc.className = 'event-desc';
-  // Using textContent to be safe: JSON descriptions are expected to be plain text.
-  // If you want HTML, you can allow innerHTML, but be careful with untrusted content.
   desc.textContent = ev.description || '';
   card.appendChild(desc);
 
   return card;
 }
 
-// Render events to timeline element
-function renderTimeline(){
-  timelineEl.innerHTML = ''; // clear
-  if(!events.length){
+function renderTimeline() {
+  timelineEl.innerHTML = '';
+  if (!events.length) {
     const empty = document.createElement('div');
     empty.className = 'event';
-    empty.textContent = 'No events found in timeline.json';
+    empty.textContent = 'No events loaded.';
     timelineEl.appendChild(empty);
     return;
   }
-  events.forEach(ev=>{
-    const el = buildEventCard(ev);
+
+  // For graph view, we might want a wider container
+  if (currentView === 'graph') {
+    // Estimate width based on last event year
+    const lastEv = events[events.length - 1];
+    const startYear = 2010;
+    const width = ((lastEv.year - startYear) * 250) + 500;
+    timelineEl.style.width = `${Math.max(width, window.innerWidth)}px`;
+  } else {
+    timelineEl.style.width = '100%';
+  }
+
+  events.forEach((ev, idx) => {
+    const el = buildEventCard(ev, idx);
     timelineEl.appendChild(el);
   });
 }
 
-// Fetch timeline.json, validate and update global events array
-async function loadTimeline(){
-  try{
-    const resp = await fetch(TIMELINE_JSON, {cache: "no-store"});
-    if(!resp.ok) throw new Error(`Failed to load ${TIMELINE_JSON}: ${resp.status}`);
-    const json = await resp.json();
-    if(!Array.isArray(json)){
-      console.warn('timeline.json should contain a top-level array of events. Got:', json);
-      events = [];
-    } else {
-      // Normalize and validate events
-      const normalized = [];
-      json.forEach((e, idx) => {
-        // Required: name, month, year (description can be empty)
-        const name = typeof e.name === 'string' ? e.name.trim() : '';
-        const description = typeof e.description === 'string' ? e.description.trim() : '';
-        const monthNum = parseMonth(e.month);
-        const yearNum = (typeof e.year === 'number' && Number.isFinite(e.year)) ? Math.trunc(e.year) :
-                        (typeof e.year === 'string' && /^[0-9]{4}$/.test(e.year.trim()) ? Number(e.year.trim()) : null);
+// Data Loading
+async function loadTimeline() {
+  try {
+    // GitHub Pages caches heavily; add timestamp to force fresh data
+    const url = `${TIMELINE_JSON}?t=${new Date().getTime()}`;
+    const resp = await fetch(url);
 
-        if(!name){
-          console.warn(`Skipping event at index ${idx}: missing or invalid "name".`, e);
+    if (!resp.ok) {
+      // Fallback for some servers that might reject query params on static files (rare but possible)
+      if (resp.status === 404) {
+        const retry = await fetch(TIMELINE_JSON);
+        if (retry.ok) {
+          processJson(await retry.json());
           return;
         }
-        if(!monthNum){
-          console.warn(`Skipping event "${name}" at index ${idx}: invalid "month" ("${e.month}"). Expected 1-12 or month name.`, e);
-          return;
-        }
-        if(!yearNum){
-          console.warn(`Skipping event "${name}" at index ${idx}: invalid "year" ("${e.year}"). Expected 4-digit year.`, e);
-          return;
-        }
-
-        const parsedDate = new Date(yearNum, monthNum - 1, 1);
-        normalized.push({
-          ...e,
-          name,
-          description,
-          year: yearNum,
-          __monthNum: monthNum,
-          __parsedDate: parsedDate,
-          __originalIndex: idx
-        });
-      });
-
-      events = normalized;
-      applySort(); // initial sort & render
+      }
+      throw new Error(`HTTP ${resp.status}`);
     }
-  } catch (err){
-    console.error(err);
-    timelineEl.innerHTML = `<div class="event">Error loading timeline.json — check console for details.</div>`;
+    const json = await resp.json();
+    processJson(json);
+
+  } catch (err) {
+    console.warn("Fetch error:", err);
+
+    let msg = `Error loading data: ${err.message}`;
+    if (window.location.protocol === 'file:') {
+      msg = `<b>Local File Error:</b><br>Browsers block reading JSON files directly from your hard drive (CORS).<br><br>
+        To fix:<br>
+        1. Push to GitHub Pages (It will work there!)<br>
+        2. Or run a local server (e.g., <code>python -m http.server</code>)<br>
+        3. Or use VS Code "Live Server" extension.`;
+    }
+
+    timelineEl.innerHTML = `<div class="event" style="min-width: 300px; color: #ff6b6b; border-color: #ff6b6b;">${msg}</div>`;
   }
 }
 
-// Apply sorting according to select value
-function applySort(){
+function processJson(json) {
+  // Normalize
+  events = json.map((e, idx) => {
+    const monthNum = parseMonth(e.month);
+    const yearNum = Number(e.year);
+    if (!e.name || !yearNum) return null;
+    return {
+      ...e,
+      year: yearNum,
+      __monthNum: monthNum || 1, // default Jan if missing for sorting
+      __originalIndex: idx
+    };
+  }).filter(x => x);
+
+  applySort();
+}
+
+function applySort() {
   const order = sortOrderSel.value;
-  events.sort((a,b)=>{
-    // sort by year, then month
-    if(a.year !== b.year) return order === 'asc' ? a.year - b.year : b.year - a.year;
-    if(a.__monthNum !== b.__monthNum) return order === 'asc' ? a.__monthNum - b.__monthNum : b.__monthNum - a.__monthNum;
-    return a.__originalIndex - b.__originalIndex;
+  events.sort((a, b) => {
+    if (a.year !== b.year) return order === 'asc' ? a.year - b.year : b.year - a.year;
+    return order === 'asc' ? a.__monthNum - b.__monthNum : b.__monthNum - a.__monthNum;
   });
   renderTimeline();
 }
 
-// Scrolling helpers
-function scrollTimelineBy(px){
-  timelineEl.scrollBy({left: px, behavior: 'smooth'});
+function scrollTimelineBy(px) {
+  // Vertical view uses window scroll or wrapper scroll? 
+  // Our CSS says .timeline has overflow, so we scroll that.
+
+  if (currentView === 'vertical') {
+    timelineEl.scrollTop += px;
+  } else {
+    timelineEl.scrollLeft += px;
+  }
 }
 
-// Event listeners
-scrollLeftBtn.addEventListener('click', ()=> scrollTimelineBy(-400));
-scrollRightBtn.addEventListener('click', ()=> scrollTimelineBy(400));
+scrollLeftBtn.addEventListener('click', () => scrollTimelineBy(-400));
+scrollRightBtn.addEventListener('click', () => scrollTimelineBy(400));
 sortOrderSel.addEventListener('change', applySort);
 
-// Keyboard: left/right on timeline to scroll
-timelineEl.addEventListener('keydown', (e)=>{
-  if(e.key === 'ArrowLeft') { scrollTimelineBy(-220); e.preventDefault(); }
-  if(e.key === 'ArrowRight') { scrollTimelineBy(220); e.preventDefault(); }
-  if(e.key === 'Home') { timelineEl.scrollLeft = 0; e.preventDefault(); }
-  if(e.key === 'End') { timelineEl.scrollLeft = timelineEl.scrollWidth; e.preventDefault(); }
-});
-
-// Initialize
 loadTimeline();
