@@ -12,6 +12,7 @@ const themeSel = document.getElementById('theme-select');
 
 let events = [];
 let currentView = 'graph';
+timelineEl.classList.add('view-graph');
 
 // Theme Handling
 themeSel.addEventListener('change', (e) => {
