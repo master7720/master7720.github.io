@@ -3,7 +3,7 @@
 */
 
 :root {
-  /* --- DEFAULT THEME (Dark Blue/Glass) --- */
+  /* --- DARK THEME --- */
   --bg-grad: linear-gradient(180deg, #0f1724 0%, #071026 100%);
   --text-main: #e6eef8;
   --text-muted: #9fb0cc;
@@ -41,8 +41,8 @@ body[data-theme="cyberpunk"] {
   --shadow: 0 0 15px rgba(0, 243, 255, 0.2);
 }
 
-/* MINIMAL THEME */
-body[data-theme="minimal"] {
+/* Light THEME */
+body[data-theme="Light"] {
   --bg-grad: #f8f9fa;
   --text-main: #111;
   --text-muted: #666;
