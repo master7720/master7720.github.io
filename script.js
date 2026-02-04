@@ -13,9 +13,6 @@ const themeSel = document.getElementById('theme-select');
 let events = [];
 let currentView = 'horizontal';
 
-// Init default view class
-timelineEl.classList.add('view-horizontal');
-
 // Theme Handling
 themeSel.addEventListener('change', (e) => {
   document.body.setAttribute('data-theme', e.target.value);
@@ -76,42 +73,34 @@ function buildEventCard(ev, index) {
     const yearDiff = ev.year - startYear;
     const monthOffset = (ev.__monthNum || 1) / 12;
     const xPos = (yearDiff + monthOffset) * 200 + 50; // 200px per year
-    const minYear = window.graphMinYear || 2010; // set during render
-    const yearRowHeight = 100; // px
-    const yPos = (ev.year - minYear) * yearRowHeight + 50; // +50 for padding
 
-    // X Axis: Month (1-12)
-    // 12 columns. Center of column = (month - 0.5) / 12 * 100%
-    const monthIndex = ev.__monthNum || 1;
-    const xPercent = ((monthIndex - 0.5) / 12) * 100;
+    // Calculate Y based on index (Simple staggering)
+    // Top range: 50px to 400px
+    const yStrata = ['50px', '250px', '450px', '150px', '350px'];
+    const yPos = yStrata[index % 5];
 
-    card.style.left = `calc(80px + ${xPercent}%)`; // 80px offset for Y-axis
-    card.style.top = `${yPos}px`;
+    card.style.left = `${xPos}px`;
+    card.style.top = yPos;
   } else {
     card.style.left = '';
     card.style.top = '';
   }
 
-  // --- Internal Content (Visible in Cards, Hidden in Dots until hover) ---
-
-  // We wrap content in a popup div if in graph mode, or just normal flow?
-  // The CSS hides direct children in graph mode .view-graph .event > * { display: none }
-  // So we assume the structure below is standard, and we add a specific popup container for graph hover.
-
-  // 1. Standard Content (for Horizontal/Vertical)
   const accent = document.createElement('span');
   accent.className = 'event-accent';
   if (ev.color) accent.style.background = ev.color;
   card.appendChild(accent);
 
-  const dateDiv = document.createElement('div');
-  dateDiv.className = 'event-date';
-  dateDiv.textContent = monthYearLabel(ev.__monthNum, ev.year);
-  card.appendChild(dateDiv);
+  const date = document.createElement('div');
+  date.className = 'event-date';
+  date.textContent = monthYearLabel(ev.__monthNum, ev.year);
+  card.appendChild(date);
 
   const h = document.createElement('h3');
   h.className = 'event-title';
   h.textContent = ev.name || 'Untitled';
+  // Use theme color for title if specific color not provided, using CSS var usually better
+  // but here we let specific JSON color override logic if we added that CSS rule.
   if (ev.color) h.style.color = ev.color;
   card.appendChild(h);
 
@@ -120,96 +109,34 @@ function buildEventCard(ev, index) {
   desc.textContent = ev.description || '';
   card.appendChild(desc);
 
-  // 2. Popup Content (Duplicated for Grid Hover effect)
-  // This is hidden by CSS unless .view-graph is active and hovered
-  const popup = document.createElement('div');
-  popup.className = 'event-popup';
-  popup.innerHTML = `
-    <h3>${ev.name}</h3>
-    <div class="date">${monthYearLabel(ev.__monthNum, ev.year)}</div>
-    <p>${ev.description || ''}</p>
-  `;
-  card.appendChild(popup);
-
   return card;
 }
 
 function renderTimeline() {
   timelineEl.innerHTML = '';
-
   if (!events.length) {
-    timelineEl.innerHTML = '<div class="event">No events loaded.</div>';
+    const empty = document.createElement('div');
+    empty.className = 'event';
+    empty.textContent = 'No events loaded.';
+    timelineEl.appendChild(empty);
     return;
   }
 
-  // --- GRAPH VIEW SETUP ---
+  // For graph view, we might want a wider container
   if (currentView === 'graph') {
-    // 1. Calculate Range
-    const years = events.map(e => e.year);
-    const minYear = Math.min(...years);
-    const maxYear = Math.max(...years);
-    window.graphMinYear = minYear; // store for buildEventCard
-
-    const totalHeight = (maxYear - minYear + 1) * 100 + 100; // 100px per year + padding
-
-    // Reset container to window size
-    timelineEl.style.height = '100%';
-    timelineEl.style.width = '100%';
-    timelineEl.style.display = 'block'; // Ensure block layout for scrolling
-
-    // Create a Canvas Wrapper to hold content and force scroll
-    const canvas = document.createElement('div');
-    canvas.className = 'graph-canvas';
-    canvas.style.height = `${totalHeight}px`;
-    canvas.style.minWidth = '800px'; // Prevent squashing on small screens
-    canvas.style.position = 'relative';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-
-    // 2. Render X-Axis (Months) - Sticky Header
-    const xAxis = document.createElement('div');
-    xAxis.className = 'graph-axis-x';
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    monthNames.forEach(m => {
-      const label = document.createElement('div');
-      label.className = 'graph-month-label';
-      label.textContent = m;
-      xAxis.appendChild(label);
-    });
-    // Sticky needs to be relative to the scroll parent (timelineEl), but visually inside canvas?
-    // If usage: sticky, it works within the scroll container. 
-    // We'll append xAxis to canvas, top:0.
-    canvas.appendChild(xAxis);
-
-    // 3. Render Y-Axis (Years)
-    for (let y = minYear; y <= maxYear; y++) {
-      const yLabel = document.createElement('div');
-      yLabel.className = 'graph-axis-y';
-      yLabel.textContent = y;
-      yLabel.style.top = `${(y - minYear) * 100 + 50 - 10}px`; // center on row
-      canvas.appendChild(yLabel);
-    }
-
-    // 4. Render Events into Canvas
-    events.forEach((ev, idx) => {
-      const el = buildEventCard(ev, idx);
-      canvas.appendChild(el);
-    });
-
-    timelineEl.appendChild(canvas);
-
+    // Estimate width based on last event year
+    const lastEv = events[events.length - 1];
+    const startYear = 2010;
+    const width = ((lastEv.year - startYear) * 250) + 500;
+    timelineEl.style.width = `${Math.max(width, window.innerWidth)}px`;
   } else {
-    // Reset styles for other views (Horizontal/Vertical)
-    timelineEl.style.height = '';
     timelineEl.style.width = '100%';
-    timelineEl.style.display = ''; // Reset to Flex (defined in CSS)
-
-    // Standard Render
-    events.forEach((ev, idx) => {
-      const el = buildEventCard(ev, idx);
-      timelineEl.appendChild(el);
-    });
   }
+
+  events.forEach((ev, idx) => {
+    const el = buildEventCard(ev, idx);
+    timelineEl.appendChild(el);
+  });
 }
 
 // Data Loading
