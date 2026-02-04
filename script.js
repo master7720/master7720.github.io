@@ -151,15 +151,24 @@ function renderTimeline() {
     window.graphMinYear = minYear; // store for buildEventCard
 
     const totalHeight = (maxYear - minYear + 1) * 100 + 100; // 100px per year + padding
-    timelineEl.style.height = `${totalHeight}px`;
-    timelineEl.style.width = '100%'; // Full width container
+
+    // Reset container to window size
+    timelineEl.style.height = '100%';
+    timelineEl.style.width = '100%';
+    timelineEl.style.display = 'block'; // Ensure block layout for scrolling
+
+    // Create a Canvas Wrapper to hold content and force scroll
+    const canvas = document.createElement('div');
+    canvas.className = 'graph-canvas';
+    canvas.style.height = `${totalHeight}px`;
+    canvas.style.minWidth = '800px'; // Prevent squashing on small screens
+    canvas.style.position = 'relative';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
 
     // 2. Render X-Axis (Months) - Sticky Header
     const xAxis = document.createElement('div');
     xAxis.className = 'graph-axis-x';
-    // We need to shift it right by 80px (Y-axis width)
-    // Actually CSS handles padding, but the stickiness needs to be inside or outside?
-    // Let's rely on CSS flex logic for the 12 columns.
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     monthNames.forEach(m => {
       const label = document.createElement('div');
@@ -167,7 +176,10 @@ function renderTimeline() {
       label.textContent = m;
       xAxis.appendChild(label);
     });
-    timelineEl.appendChild(xAxis);
+    // Sticky needs to be relative to the scroll parent (timelineEl), but visually inside canvas?
+    // If usage: sticky, it works within the scroll container. 
+    // We'll append xAxis to canvas, top:0.
+    canvas.appendChild(xAxis);
 
     // 3. Render Y-Axis (Years)
     for (let y = minYear; y <= maxYear; y++) {
@@ -175,19 +187,29 @@ function renderTimeline() {
       yLabel.className = 'graph-axis-y';
       yLabel.textContent = y;
       yLabel.style.top = `${(y - minYear) * 100 + 50 - 10}px`; // center on row
-      timelineEl.appendChild(yLabel);
+      canvas.appendChild(yLabel);
     }
+
+    // 4. Render Events into Canvas
+    events.forEach((ev, idx) => {
+      const el = buildEventCard(ev, idx);
+      canvas.appendChild(el);
+    });
+
+    timelineEl.appendChild(canvas);
+
   } else {
-    // Reset styles for other views
+    // Reset styles for other views (Horizontal/Vertical)
     timelineEl.style.height = '';
     timelineEl.style.width = '100%';
-  }
+    timelineEl.style.display = ''; // Reset to Flex (defined in CSS)
 
-  // --- RENDER EVENTS ---
-  events.forEach((ev, idx) => {
-    const el = buildEventCard(ev, idx);
-    timelineEl.appendChild(el);
-  });
+    // Standard Render
+    events.forEach((ev, idx) => {
+      const el = buildEventCard(ev, idx);
+      timelineEl.appendChild(el);
+    });
+  }
 }
 
 // Data Loading
