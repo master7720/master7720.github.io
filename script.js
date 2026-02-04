@@ -23,7 +23,7 @@ viewModeSel.addEventListener('change', (e) => {
   currentView = e.target.value;
 
   // Reset classes
-  timelineEl.classList.remove('view-horizontal', 'view-vertical', 'view-graph');
+  timelineEl.classList.remove('view-graph');
   timelineEl.classList.add(`view-${currentView}`);
 
   // Rerender (Graph view needs specific positioning calculation)
