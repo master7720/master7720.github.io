@@ -11,10 +11,10 @@ const viewModeSel = document.getElementById('view-mode');
 const themeSel = document.getElementById('theme-select');
 
 let events = [];
-let currentView = 'horizontal';
+let currentView = 'graph';
 
 // Init default view class
-timelineEl.classList.add('view-horizontal');
+timelineEl.classList.add('view-graph');
 
 // Theme Handling
 themeSel.addEventListener('change', (e) => {
