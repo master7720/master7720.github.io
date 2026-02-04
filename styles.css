@@ -1,0 +1,153 @@
+/* styles.css
+   Simple, customizable horizontal timeline using CSS variables for theming.
+   Edit the :root variables below to change colors, sizes, and spacing.
+*/
+
+:root{
+  /* Theming variables - change these to customize */
+  --page-bg: #0f1724;
+  --text-color: #e6eef8;
+  --muted: #9fb0cc;
+  --card-bg: #0b1320;
+  --accent: #4f9cff;
+  --accent-2: #7de3a2;
+  --card-radius: 12px;
+  --card-width: 320px; /* event card width */
+  --card-padding: 16px;
+  --gutter: 24px;
+  --timeline-height: 220px;
+  --shadow: 0 6px 18px rgba(2,6,23,0.7);
+  --focus-outline: 3px solid rgba(79,156,255,0.35);
+  --font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--page-bg), #071026);
+  color:var(--text-color);
+  font-family:var(--font-family);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.4;
+  padding:24px;
+}
+
+/* Header */
+.site-header{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.site-title{margin:0;font-size:1.35rem}
+.site-subtitle{margin:0;color:var(--muted);font-size:0.95rem}
+.controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.controls button{
+  background:transparent;
+  color:var(--text-color);
+  border:1px solid rgba(255,255,255,0.06);
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.controls button:focus{outline:var(--focus-outline)}
+.sort-label{color:var(--muted);font-size:0.9rem}
+
+/* Timeline wrapper */
+.timeline-wrapper{
+  padding:16px 0;
+}
+
+/* Horizontal scroll container */
+.timeline{
+  display:flex;
+  gap:var(--gutter);
+  align-items:center;
+  padding:20px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-behavior:smooth;
+  min-height:var(--timeline-height);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+  box-shadow:var(--shadow);
+}
+
+/* Hide scrollbar in WebKit */
+.timeline::-webkit-scrollbar{height:10px}
+.timeline::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,0.06);
+  border-radius:10px;
+}
+
+/* Event card */
+.event{
+  background:var(--card-bg);
+  min-width:var(--card-width);
+  border-radius:var(--card-radius);
+  padding:var(--card-padding);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  position:relative;
+  flex-shrink:0;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.event:focus-within{outline:var(--focus-outline)}
+
+/* Date chip */
+.event-date{
+  color:var(--muted);
+  font-size:0.85rem;
+}
+
+/* Title & subtitle */
+.event-title{margin:0;font-size:1.05rem}
+.event-subtitle{margin:0;color:var(--muted);font-size:0.92rem}
+
+/* Description */
+.event-desc{color:var(--text-color);font-size:0.95rem;margin-top:6px}
+
+/* Optional image */
+.event-image{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-top:8px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* Link */
+.event-link{color:var(--accent);text-decoration:none;font-weight:600;font-size:0.95rem}
+.event-link:hover{text-decoration:underline}
+
+/* Small helper for colored accent */
+.event-accent{
+  width:10px;height:10px;border-radius:50%;
+  position:absolute;left:-5px;top:16px;border:2px solid var(--card-bg);
+}
+
+/* Responsive: on small screens, stack vertically */
+@media (max-width:720px){
+  .timeline{
+    flex-direction:column;
+    min-height:0;
+    gap:12px;
+  }
+  .event{min-width:unset;width:100%}
+  .controls{width:100%;justify-content:flex-start}
+}
+
+/* Utility */
+.hidden{display:none}

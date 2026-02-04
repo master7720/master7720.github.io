@@ -1,0 +1,32 @@
+[
+  {
+    "id": "evt-001",
+    "date": "2020-05-12",
+    "title": "Project Started",
+    "subtitle": "Idea & planning",
+    "description": "The idea for this timeline project was sketched out and initial planning began.",
+    "url": "",
+    "image": "",
+    "color": "#4f9cff"
+  },
+  {
+    "id": "evt-002",
+    "date": "2021-03-01",
+    "title": "First Release",
+    "subtitle": "MVP deployed",
+    "description": "Released the first public version. Users could scroll through events horizontally.",
+    "url": "",
+    "image": "",
+    "color": "#7de3a2"
+  },
+  {
+    "id": "evt-003",
+    "date": "2022-11-10",
+    "title": "Feature Update",
+    "subtitle": "Customization & theming",
+    "description": "Added CSS variables and configuration for easy theming. You can now change colors in <code>styles.css</code>.",
+    "url": "",
+    "image": "",
+    "color": "#f6c85f"
+  }
+]

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Horizontal Timeline</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!--
+    Horizontal Timeline
+    - Reads events from timeline.json (same folder).
+    - To change content, edit timeline.json only.
+    - Each event should include: name, description, month, year.
+  -->
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">My Timeline</h1>
+    <p class="site-subtitle">A simple, horizontal timeline — edit timeline.json to add patches (name, description, month, year).</p>
+    <div class="controls">
+      <button id="scroll-left" aria-label="Scroll left">&larr;</button>
+      <button id="scroll-right" aria-label="Scroll right">&rarr;</button>
+      <label for="sort-order" class="sort-label">Sort:</label>
+      <select id="sort-order" aria-label="Sort order">
+        <option value="asc">Oldest → Newest</option>
+        <option value="desc">Newest → Oldest</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section id="timeline-wrapper" class="timeline-wrapper" aria-label="Timeline">
+      <div id="timeline" class="timeline" tabindex="0">
+        <!-- Events will be injected here -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>Timeline source: <code>timeline.json</code> — edit that file to update the timeline.</small>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
