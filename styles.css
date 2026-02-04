@@ -3,7 +3,7 @@
 */
 
 :root {
-  /* --- DEFAULT THEME (Dark Blue/Glass) --- */
+  /* --- DARK THEME  --- */
   --bg-grad: linear-gradient(180deg, #0f1724 0%, #071026 100%);
   --text-main: #e6eef8;
   --text-muted: #9fb0cc;
@@ -20,29 +20,8 @@
   --card-width: 300px;
 }
 
-/* --- THEMES --- */
-
-/* CYBERPUNK THEME */
-body[data-theme="cyberpunk"] {
-  --bg-grad: repeating-linear-gradient(0deg,
-      transparent 0,
-      transparent 1px,
-      rgba(255, 0, 255, 0.05) 1px,
-      rgba(255, 0, 255, 0.05) 2px),
-    linear-gradient(to bottom, #050011, #120024);
-  --text-main: #00f3ff;
-  --text-muted: #ff00ff;
-  --card-bg: rgba(10, 10, 10, 0.9);
-  --card-border: #00f3ff;
-  --accent: #ff00ff;
-  --accent-glow: #00f3ff;
-  --font-body: 'Courier New', Courier, monospace;
-  --card-radius: 2px;
-  --shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-}
-
-/* MINIMAL THEME */
-body[data-theme="minimal"] {
+/* LIGHT THEME */
+body[data-theme="Light"] {
   --bg-grad: #f8f9fa;
   --text-main: #111;
   --text-muted: #666;
@@ -55,20 +34,6 @@ body[data-theme="minimal"] {
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* RETRO THEME */
-body[data-theme="retro"] {
-  --bg-grad: #000000;
-  --text-main: #33ff33;
-  --text-muted: #22aa22;
-  --card-bg: #001100;
-  --card-border: #33ff33;
-  --accent: #33ff33;
-  --accent-glow: rgba(51, 255, 51, 0.2);
-  --font-body: 'Press Start 2P', cursive, 'Courier New', monospace;
-  /* Fallback to monospace if font not loaded */
-  --card-radius: 0px;
-  --shadow: none;
-}
 
 /* --- BASE STYLES --- */
 * {
