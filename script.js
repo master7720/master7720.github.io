@@ -32,32 +32,38 @@ viewModeSel.addEventListener('change', (e) => {
 });
 
 // Month Mapping
-const MONTHS = { //this is prolly the worst fucking thing ive ever seen in coding // am fixing this today
-  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-  jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
+const MONTH_NAMES = [
+  'january','february','march','april','may','june',
+  'july','august','september','october','november','december'
+];
+
+const MONTH_ALIASES = {
+  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
+  jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
 };
 
-function parseMonth(m) {
-  if (m === undefined || m === null) return null;
-  if (typeof m === 'number' && Number.isFinite(m)) {
-    const n = Math.trunc(m);
+function parseMonth(month) {
+  if (!month) return null;
+
+  if (typeof month === 'number' && Number.isFinite(month)) {
+    const n = Math.trunc(month);
     return (n >= 1 && n <= 12) ? n : null;
   }
-  if (typeof m === 'string') {
-    const trimmed = m.trim().toLowerCase();
-    const n = Number(trimmed);
-    if (!Number.isNaN(n) && Number.isFinite(n)) return (n >= 1 && n <= 12) ? n : null;
-    return MONTHS[trimmed] || null;
-  }
-  return null;
-}
 
-function monthYearLabel(monthNum, year) {
-  if (!year) return '';
-  if (!monthNum) return String(year);
-  const d = new Date(year, monthNum - 1, 1);
-  return d.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+  if (typeof month === 'string') {
+    const m = month.trim().toLowerCase();
+    const num = Number(m);
+    if (!Number.isNaN(num) && num >= 1 && num <= 12) return num;
+
+    // Check full month names
+    const fullIndex = MONTH_NAMES.indexOf(m);
+    if (fullIndex !== -1) return fullIndex + 1;
+
+    // Check aliases
+    if (MONTH_ALIASES[m]) return MONTH_ALIASES[m];
+  }
+
+  return null;
 }
 
 function buildEventCard(ev, index) {
