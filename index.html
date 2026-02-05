@@ -6,19 +6,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Timeline</title>
   <link rel="stylesheet" href="styles.css" />
-  <!--
-    Horizontal Timeline
-    - Reads events from timeline.json (same folder).
-    - To change content, edit timeline.json only.
-    - Each event should include: name, description, month, year.
-  -->
 </head>
 
 <body>
   <header class="site-header">
     <h1 class="site-title">Anarchy Client Timeline</h1>
-    <p class="site-subtitle">Timeline Of Various Anarchy Clients.</p>
-    <div class="controls">
+    <p class="site-subtitle">Timeline of Various Anarchy Clients</p>
+
+    <div class="controls" role="region" aria-label="Timeline controls">
       <!-- View Switcher -->
       <div class="control-group">
         <label for="view-mode" class="control-label">View:</label>
@@ -34,17 +29,21 @@
         <label for="theme-select" class="control-label">Theme:</label>
         <select id="theme-select">
           <option value="default">Default</option>
-          <option value="cyberpunk">Cyberpunk</option>
           <option value="minimal">Minimal</option>
+          <option value="cyberpunk">Cyberpunk</option>
           <option value="retro">Retro</option>
         </select>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider" aria-hidden="true"></div>
 
-      <button id="scroll-left" aria-label="Scroll left" title="Scroll Left">&larr;</button>
-      <button id="scroll-right" aria-label="Scroll right" title="Scroll Right">&rarr;</button>
+      <!-- Timeline Navigation -->
+      <div class="control-group" role="group" aria-label="Timeline navigation">
+        <button id="scroll-left" aria-label="Scroll timeline left" title="Scroll Left">&larr;</button>
+        <button id="scroll-right" aria-label="Scroll timeline right" title="Scroll Right">&rarr;</button>
+      </div>
 
+      <!-- Sort Order -->
       <div class="control-group">
         <label for="sort-order" class="control-label">Sort:</label>
         <select id="sort-order" aria-label="Sort order">
@@ -56,15 +55,18 @@
   </header>
 
   <main>
-    <section id="timeline-wrapper" class="timeline-wrapper" aria-label="Timeline">
-      <div id="timeline" class="timeline" tabindex="0">
-        <!-- Events will be injected here -->
-      </div>
+    <section id="timeline-wrapper" class="timeline-wrapper" aria-label="Timeline of clients">
+      <!-- Using a <ul> for better semantic structure -->
+      <ul id="timeline" class="timeline" tabindex="0" aria-live="polite">
+        <!-- Timeline events will be injected as <li><article> elements here -->
+      </ul>
     </section>
   </main>
 
   <footer class="site-footer">
-    <small>Timeline source: <code>timeline.json</code> — edit that file to update the timeline.</small>
+    <small>
+      Timeline source: <code>timeline.json</code> — edit that file to update the timeline.
+    </small>
   </footer>
 
   <script src="script.js" defer></script>
