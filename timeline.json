@@ -187,5 +187,12 @@
     "month": 7,
     "year": 2024,
     "color": "#A879BE"
-  }
+  },
+  {
+    "name": "Sn0w",
+    "description": "Mainly a pvp client that had introduce new features like holesnap timer, chorus manipulation, fast phasewalk that goes down and up, predict surround and some other bypasses.",
+    "month": 3,
+    "year": 2021,
+    "color": "#A879BE"
+  },
 ]
