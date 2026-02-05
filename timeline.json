@@ -43,7 +43,7 @@
   },
   {
     "name": "WWE/Inertia",
-    "description": "A free utility mod with over 470 thousand downloads, featuring advanced combat and render modules. Formerly known as WWE Client, the name was changed due to DMCA infringement",
+    "description": "A free utility mod that used for its movement modules and dupe modules. Formerly known as WWE Client, the name was changed due to DMCA infringement",
     "month": 8,
     "year": 2014,
     "color": "#A879BE"
@@ -64,7 +64,7 @@
   },
   {
     "name": "Impact",
-    "description": "Impact is a free, closed source, client, and was one of the first to integrate Baritone functionality, an AI pathfinding bot that can navigate. It was made well known during the Rusher War after Rusher's advertisement and through eventually use of many 2b2t YouTubers. It has seen much use, however has not been updated since around 2021, and has become outdated. Many of its modules have stopped functioning on 2b2t, due to the evolving anticheat, but many casual players still can make good use of it thanks to an easy to use GUI, and easily configurable modules.",
+    "description": "A free client that was one of the first to integrate Baritone functionality. It was made well known during the Rusher War after Rusher's advertisement it.",
     "month": 6,
     "year": 2016,
     "color": "#A879BE"
@@ -78,7 +78,7 @@
   },
   {
     "name": "Future",
-    "description": "A paid client advertised by Fit and several other 2b2t YouTubers. It is a very popular client as a result, and is used by many. It has highly powerful PvP modules.",
+    "description": "A paid client advertised by Fit and several other 2b2t YouTubers. It is a very popular client as a result, and is used by many for It has highly powerful PvP modules. Still used today.",
     "month": 8,
     "year": 2016,
     "color": "#A879BE"
@@ -162,14 +162,14 @@
   },
   {
     "name": "WurstPlusThree",
-    "description": "",
+    "description": "A continued rewrite of Wurst+2.",
     "month": 5,
     "year": 2021,
     "color": "#A879BE"
   },
   {
     "name": "Lambda",
-    "description": "An open-source, therefore free, continuation of now discontinued KAMI Blue. It provides regular updates, and thanks to it being open-source, anyone can contribute. It features a stunningly visionary plugin system, allowing for hot-loading of plugins while in game, to allow for immense customization and quick changes, without reloading Minecraft. It has many advanced utility modules, and can be used for PvP as well, but is more geared towards more casual players.",
+    "description": "continuation of now discontinued KAMI Blue. Still used today but its in aplha stage of its Fabric port.",
     "month": 6,
     "year": 2021,
     "color": "#A879BE"
@@ -193,6 +193,34 @@
     "description": "Mainly a pvp client that had introduce new features like holesnap timer, chorus manipulation, fast phasewalk that goes down and up, predict surround and some other bypasses.",
     "month": 3,
     "year": 2021,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Phobos v1",
+    "description": "3arthqu4ke began as a contributor to Hephatsues, a Kami fork originally made for kznnor, and later created his own fork to experiment and learn Java. After his version was leaked and renamed Phobos, it gained a unique GUI and signature features like YPort, which helped bypass NCP and became a defining identifier of early Phobos.",
+    "month": 12,
+    "year": 2018,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Phobos v2",
+    "description": "Phobos 2 was a full rewrite developed from late 2019 to 2020, attracting heavy attention due to its very advanced combat modules like Autocrystal,Offhand and many more, until its source was stolen and retaliatory malware releases led to one of the largest client rats ever. During this era, 3arthqu4ke also introduced PingBypass, a groundbreaking system that ran modules remotely closer to servers.",
+    "month": 12,
+    "year": 2019,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Phobos Newbase/3arthh4ck",
+    "description": "Newbase marked a complete newbase rewrite that introduced revolutionary modules like PistonAura, SilentSwitch, TickShift, advanced Surrounds, and HoleESP, making it the strongest client of its time. Its popularity exploded through PvP content creators, but later leaks led to public releases making it a public open source client.",
+    "month": 12,
+    "year": 2022,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Phobot",
+    "description": "Phobot is a Fabric addon to the new fabric pingbypass created to be cleaner, more organized, and more modern, supporting Fabric, Forge, and NeoForge. While not stronger than Newbase, it introduced improved extrapolation, CrystalBomb integration, plugin support, and marked 3arthqu4ke’s transition into more maintainable client design.",
+    "month": 12,
+    "year": 2023,
     "color": "#A879BE"
   },
 ]
