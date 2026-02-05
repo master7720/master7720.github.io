@@ -185,14 +185,14 @@
     "name": "Mio-Fabric",
     "description": "Well known 2b client for its advanced combat modules and grim bypasses.",
     "month": 7,
-    "year": 2024,
+    "year": 2021,
     "color": "#A879BE"
   },
   {
     "name": "Sn0w",
     "description": "Mainly a pvp client that had introduce new features like holesnap timer, chorus manipulation, fast phasewalk that goes down and up, predict surround and some other bypasses.",
-    "month": 3,
-    "year": 2021,
+    "month": 11,
+    "year": 2025,
     "color": "#A879BE"
   },
   {
@@ -213,7 +213,7 @@
     "name": "Phobos Newbase/3arthh4ck",
     "description": "Newbase marked a complete newbase rewrite that introduced revolutionary modules like PistonAura, SilentSwitch, TickShift, advanced Surrounds, and HoleESP, making it the strongest client of its time. Its popularity exploded through PvP content creators, but later leaks led to public releases making it a public open source client.",
     "month": 12,
-    "year": 2022,
+    "year": 2021,
     "color": "#A879BE"
   },
   {
@@ -249,6 +249,13 @@
     "description": "Private client known for inventing the holebuilder module that everyone tries to copy but fails.",
     "month": 8,
     "year": 2024,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Bleachhack",
+    "description": "One of the first public clients to have a autobedrockbreaker and a working 2b elytra fly.  ",
+    "month": 7,
+    "year": 2019,
     "color": "#A879BE"
   }
 ]
