@@ -1,9 +1,8 @@
 /* styles.css
-   Robust theming and layout system for timeline.
-*/
+Themes and Layout*/
 
 :root {
-  /* --- DEFAULT THEME (Dark Blue/Glass) --- */
+  /* --- DEFAULT THEME (Dark Blue) --- */
   --bg-grad: linear-gradient(180deg, #0f1724 0%, #071026 100%);
   --text-main: #e6eef8;
   --text-muted: #9fb0cc;
@@ -184,7 +183,7 @@ main {
 }
 
 .timeline {
-  /* Base styles (Horizontal by default) */
+  /* Base styles (Graph by default) */
   display: flex;
   gap: 40px;
   padding: 40px;
@@ -192,8 +191,6 @@ main {
   overflow-y: hidden;
   width: 100%;
   height: 100%;
-  justify-content: space-between; 
-  align-items: center;
   align-items: center;
   scroll-behavior: smooth;
   /* Scrollbar Styling */
@@ -350,30 +347,38 @@ main {
   overflow: auto;
   /* Scrollable canvas */
   position: relative;
-  width: 3000px;
-  /* Force wide canvas */
-  height: 100%;
+  /* Large canvas that scales with content */
+  min-width: 100%;
+  min-height: 100%;
   background-image: radial-gradient(var(--card-border) 1px, transparent 1px);
   background-size: 40px 40px;
   /* Grid dots */
+  /* Allow smooth CSS transforms for zoom */
+  transition: transform 0.1s ease-out;
+  transform-origin: top left;
 }
 
+/* Prevent card crushing in graph view */
 .timeline.view-graph .event {
   position: absolute;
-  width: 250px;
-  min-width: unset;
+  width: 280px; /* Slightly wider cards */
+  min-width: 280px;
+  max-width: 280px;
+  /* Prevent shrinking during zoom */
+  flex-shrink: 0;
   /* Top/Left set by JS */
 }
 
+/* Connection line to show chronology */
 .timeline.view-graph .event::before {
-  /* Dot on the timeline axis if we wanted one, but for now specific positioning */
   content: '';
   position: absolute;
   left: 50%;
-  top: -10px;
+  top: -20px;
   width: 2px;
-  height: 10px;
+  height: 20px;
   background: var(--accent);
+  opacity: 0.5;
 }
 
 /* Footer */
@@ -415,5 +420,12 @@ main {
     margin: 0 0 20px 40px;
     border: 1px solid var(--card-border);
     border-left: 3px solid var(--accent);
+  }
+  
+  /* Adjust graph view for mobile */
+  .timeline.view-graph .event {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
   }
 }
