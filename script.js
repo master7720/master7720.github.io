@@ -12,7 +12,7 @@ const themeSel = document.getElementById('theme-select');
 
 let events = [];
 let currentView = 'graph';
-let graphScale = 1; // Track zoom level for graph view
+timelineEl.classList.add('view-graph');
 
 // Theme Handling
 themeSel.addEventListener('change', (e) => {
@@ -31,33 +31,50 @@ viewModeSel.addEventListener('change', (e) => {
   renderTimeline();
 });
 
-// Month Mapping
-const MONTHS = { 
-  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-  jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
-};
-
-function parseMonth(m) {
-  if (m === undefined || m === null) return null;
-  if (typeof m === 'number' && Number.isFinite(m)) {
-    const n = Math.trunc(m);
-    return (n >= 1 && n <= 12) ? n : null;
-  }
-  if (typeof m === 'string') {
-    const trimmed = m.trim().toLowerCase();
-    const n = Number(trimmed);
-    if (!Number.isNaN(n) && Number.isFinite(n)) return (n >= 1 && n <= 12) ? n : null;
-    return MONTHS[trimmed] || null;
-  }
-  return null;
-}
-
 function monthYearLabel(monthNum, year) {
   if (!year) return '';
-  if (!monthNum) return String(year);
-  const d = new Date(year, monthNum - 1, 1);
-  return d.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+
+  if (!monthNum || monthNum < 1 || monthNum > 12) {
+    return String(year);
+  }
+
+  const name = MONTH_NAMES[monthNum - 1];
+  return `${name.charAt(0).toUpperCase() + name.slice(1)} ${year}`;
+}
+
+// Month Mapping
+const MONTH_NAMES = [
+  'january','february','march','april','may','june',
+  'july','august','september','october','november','december'
+];
+
+const MONTH_ALIASES = {
+  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
+  jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12
+};
+
+function parseMonth(month) {
+  if (!month) return null;
+
+  if (typeof month === 'number' && Number.isFinite(month)) {
+    const n = Math.trunc(month);
+    return (n >= 1 && n <= 12) ? n : null;
+  }
+
+  if (typeof month === 'string') {
+    const m = month.trim().toLowerCase();
+    const num = Number(m);
+    if (!Number.isNaN(num) && num >= 1 && num <= 12) return num;
+
+    // Check full month names
+    const fullIndex = MONTH_NAMES.indexOf(m);
+    if (fullIndex !== -1) return fullIndex + 1;
+
+    // Check aliases
+    if (MONTH_ALIASES[m]) return MONTH_ALIASES[m];
+  }
+
+  return null;
 }
 
 function buildEventCard(ev, index) {
@@ -67,26 +84,21 @@ function buildEventCard(ev, index) {
 
   // Graph View Positioning Logic
   if (currentView === 'graph') {
-    // Calculate X based on date with better spacing
+    // Calculate X based on date (approx pixels)
+    // Assume 2010 is start (0px). 
+    // 1 Year = 300px width?
     const startYear = 2010;
     const yearDiff = ev.year - startYear;
     const monthOffset = (ev.__monthNum || 1) / 12;
-    
-    // Increased spacing: 400px per year instead of 200px
-    // This gives more room for cards to spread out
-    const xPos = (yearDiff + monthOffset) * 400 + 100;
+    const xPos = (yearDiff + monthOffset) * 200 + 50; // 200px per year
 
-    // Calculate Y with better vertical distribution
-    // Use modulo to create multiple rows, with more vertical spacing
-    const rowHeight = 280; // Increased from implicit ~200px
-    const numRows = 5;
-    const row = index % numRows;
-    const yPos = 80 + (row * rowHeight);
+    // Calculate Y based on index (Simple staggering)
+    // Top range: 50px to 400px
+    const yStrata = ['50px', '250px', '450px', '150px', '350px'];
+    const yPos = yStrata[index % 5];
 
     card.style.left = `${xPos}px`;
-    card.style.top = `${yPos}px`;
-    card.setAttribute('data-x', xPos);
-    card.setAttribute('data-y', yPos);
+    card.style.top = yPos;
   } else {
     card.style.left = '';
     card.style.top = '';
@@ -128,48 +140,21 @@ function renderTimeline() {
     return;
   }
 
-  // For graph view, calculate canvas size based on content
+  // For graph view, we might want a wider container
   if (currentView === 'graph') {
+    // Estimate width based on last event year
     const lastEv = events[events.length - 1];
     const startYear = 2010;
-    
-    // Much wider canvas to accommodate spread out cards
-    const width = ((lastEv.year - startYear) * 400) + 800;
-    
-    // Taller canvas to accommodate more rows
-    const height = Math.max(1600, window.innerHeight);
-    
-    timelineEl.style.width = `${width}px`;
-    timelineEl.style.height = `${height}px`;
+    const width = ((lastEv.year - startYear) * 250) + 500;
+    timelineEl.style.width = `${Math.max(width, window.innerWidth)}px`;
   } else {
     timelineEl.style.width = '100%';
-    timelineEl.style.height = '100%';
   }
 
   events.forEach((ev, idx) => {
     const el = buildEventCard(ev, idx);
     timelineEl.appendChild(el);
   });
-}
-
-// Add zoom handling for graph view
-if (timelineEl) {
-  timelineEl.addEventListener('wheel', (e) => {
-    if (currentView !== 'graph') return;
-    
-    // Check if user is zooming (Ctrl/Cmd + wheel)
-    if (e.ctrlKey || e.metaKey) {
-      e.preventDefault();
-      
-      // Adjust scale based on wheel direction
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      graphScale = Math.max(0.3, Math.min(3, graphScale * delta));
-      
-      // Apply transform to maintain spread while zooming
-      timelineEl.style.transform = `scale(${graphScale})`;
-      timelineEl.style.transformOrigin = 'top left';
-    }
-  }, { passive: false });
 }
 
 // Data Loading
