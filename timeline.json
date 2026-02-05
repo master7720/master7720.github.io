@@ -239,7 +239,7 @@
   },
   {
     "name": "Meteor",
-    "description": "Meteor started as an obfuscated private client and later went open-source on GitHub. While it lacks almost everything for modern anarchy, it’s popular today for its advanced plugin system and large, active dev team.",
+    "description": "Meteor started as an closed source public client and later went open-source on GitHub. While it lacks almost everything for modern anarchy, it’s popular today for its advanced plugin system and large, active dev team.",
     "month": 3,
     "year": 2020,
     "color": "#A879BE"
