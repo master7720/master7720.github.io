@@ -31,6 +31,17 @@ viewModeSel.addEventListener('change', (e) => {
   renderTimeline();
 });
 
+function monthYearLabel(monthNum, year) {
+  if (!year) return '';
+
+  if (!monthNum || monthNum < 1 || monthNum > 12) {
+    return String(year);
+  }
+
+  const name = MONTH_NAMES[monthNum - 1];
+  return `${name.charAt(0).toUpperCase() + name.slice(1)} ${year}`;
+}
+
 // Month Mapping
 const MONTH_NAMES = [
   'january','february','march','april','may','june',
