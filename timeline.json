@@ -222,5 +222,33 @@
     "month": 12,
     "year": 2023,
     "color": "#A879BE"
+  },
+  {
+    "name": "Konas",
+    "description": "A paid client developed by GL_DONT_CARE, Darki, and Auto known for its 2b2t bypass and excellent autocrystal at the time.",
+    "month": 4,
+    "year": 2020,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Boze",
+    "description": "Private client made by the Konas devs now public paid client was known for being one of the first good fabric hacked client for its time.",
+    "month": 12,
+    "year": 2022,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Meteor",
+    "description": "Meteor started as an obfuscated private client and later went open-source on GitHub. While it lacks almost everything for modern anarchy, it’s popular today for its advanced plugin system and large, active dev team.",
+    "month": 3,
+    "year": 2020,
+    "color": "#A879BE"
+  },
+  {
+    "name": "Sydney",
+    "description": "Private client known for inventing the holebuilder module that everyone tries to copy but fails.",
+    "month": 8,
+    "year": 2024,
+    "color": "#A879BE"
   }
 ]
